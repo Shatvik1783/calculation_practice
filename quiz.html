@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Quiz Time</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <div class="container">
+        <h1>Answer the following questions:</h1>
+        <div id="questionSection">
+            <p id="question"></p>
+            <form id="answerForm">
+                <input type="number" id="answer" required placeholder="Enter only Integer values">
+                <button type="submit">Submit Answer</button>
+            </form>
+            <p id="feedback"></p>
+        </div>
+    </div>
+
+    <script>
+        let currentQuestion = 0;
+        let correctAnswer;
+        const numQuestions = sessionStorage.getItem('numQuestions');
+        
+        function generateQuestion() {
+            const num1 = Math.floor(Math.random() * 10) + 1;
+            const num2 = Math.floor(Math.random() * 10) + 1;
+            const op = Math.floor(Math.random() *(4-1+1) + 1);
+            if(op===1){
+            correctAnswer = num1 + num2;
+            document.getElementById('question').textContent = `${currentQuestion+1}. What is ${num1} + ${num2}?`;
+            }
+
+            if(op===2){
+            correctAnswer = num1 - num2;
+            document.getElementById('question').textContent = `${currentQuestion+1}. What is ${num1} - ${num2}?`;
+            }
+
+            if(op===3){
+            correctAnswer = num1 * num2;
+            document.getElementById('question').textContent = `${currentQuestion+1}. What is ${num1} * ${num2}?`;
+            }
+
+            if(op===4){
+            correctAnswer = parseInt(num1 / num2);
+            document.getElementById('question').textContent = `${currentQuestion+1}. What is ${num1} / ${num2} ?`;
+            }
+
+        }
+
+        document.addEventListener('DOMContentLoaded', function() {
+            generateQuestion();
+        });
+
+        document.getElementById('answerForm').addEventListener('submit', function(event) {
+            event.preventDefault();
+            const userAnswer = document.getElementById('answer').value;
+            if (parseInt(userAnswer) === correctAnswer) {
+                currentQuestion++;
+                if (currentQuestion < numQuestions) {
+                    document.getElementById('feedback').textContent = 'Correct! Next question:';
+                    generateQuestion();
+                } else {
+                    document.getElementById('questionSection').innerHTML = `<h2>Congratulations! You've completed all ${numQuestions} questions.</h2>`;
+                }
+            } else {
+                document.getElementById('feedback').textContent = 'Incorrect. Try again!';
+            }
+            document.getElementById('answer').value = '';
+        });
+    </script>
+</body>
+</html>
